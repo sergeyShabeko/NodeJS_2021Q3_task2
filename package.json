@@ -1,0 +1,26 @@
+{
+  "name": "nodejs_2021q3_task2",
+  "version": "1.0.0",
+  "description": "Simple REST service",
+  "main": "server.js",
+  "scripts": {
+    "task1": "babel --presets es2015 src/server.js -d dist && nodemon  dist/src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeyShabeko/NodeJS_2021Q3_task2.git"
+  },
+  "author": "Siarhei Shabeka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sergeyShabeko/NodeJS_2021Q3_task2/issues"
+  },
+  "homepage": "https://github.com/sergeyShabeko/NodeJS_2021Q3_task2#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "nodemon": "^2.0.14"
+  }
+}
