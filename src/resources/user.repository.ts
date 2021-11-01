@@ -1,29 +1,41 @@
-import { db } from '../database/db';
+import { db, DBInterface } from '../database/db';
 import User from './user.model';
 
-export const getAllUsers = async (): Promise<User[]> => db;
+type UserInstance = User | void;
 
-export const getUserById = async (userId: string): Promise<User|undefined> => db.filter((user) => user.id === userId)[0];
+export const getAllUsersFromDB = async (): Promise<DBInterface> => db;
 
-export const createUser = async (newUser: User): Promise<number>  => db.push(newUser);
-
-export const updateUser = async (userId: string, updatedData: User): Promise<User|undefined> => {
-    const index: number = db.findIndex((user) => user.id === userId);
-    const updatedKeys: string[] = Object.keys(updatedData);
-    const searchedUser: User|undefined = db[index];
-    if (searchedUser) {
-        updatedKeys.forEach((key) => {
-            searchedUser[key] = updatedData[key];
-        });
+export const getUserByIdFromDB = async (userId: string): Promise<UserInstance> => {
+    const isUserExists = !!db[userId] && !db[userId]!.isDeleted;
+    if (isUserExists) {
+        return db[userId];
     }
-    return db[index];
+    throw new Error();
 };
 
-export const deleteUser = async (userId: string): Promise<User | undefined> => {
-    const index: number = db.findIndex((user) => user.id === userId);
-    if (index !== -1) {
-    db[index]!.isDeleted = true;
-    return db[index];
+export const createUserInDB = async (newUser: User): Promise<UserInstance>  => {
+    const isUserExists = !!db[newUser.id];
+    if (isUserExists) {
+        throw new Error();
+    } else {
+        db[newUser.id] = newUser;
     }
-    return undefined;
+};
+
+export const updateUserInDB = async (userId: string, updatedData: User): Promise<UserInstance> => {
+    const isUserExists = !!db[userId] && !db[userId]!.isDeleted;
+    if (isUserExists) {
+        db[userId] = updatedData;
+    } else {
+        throw new Error();
+    }
+};
+
+export const deleteUserFromDB = async (userId: string): Promise<UserInstance> => {
+    const isUserExists = !!db[userId];
+    if (isUserExists) {
+        db[userId]!.isDeleted = true;
+    } else {
+        throw new Error();
+    }
 };
