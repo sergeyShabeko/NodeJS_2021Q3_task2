@@ -1,5 +1,5 @@
 import { db, DBInterface } from '../database/db';
-import User from './user.model';
+import User from '../models/user.model';
 
 type UserInstance = User | void;
 

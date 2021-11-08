@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import User from './user.model';
-import { createUser, getAllUsers, getUserById, updateUser, deleteUser, getAutoSuggestUsers } from './user.service';
+import User from '../models/user.model';
+import { createUser, getAllUsers, getUserById, updateUser, deleteUser, getAutoSuggestUsers } from '../services/user.service';
 import Joi from 'joi';
 
 const router: Router = express.Router();

@@ -1,5 +1,5 @@
-import { getAllUsersFromDB, createUserInDB, getUserByIdFromDB, updateUserInDB, deleteUserFromDB } from './user.repository';
-import User from './user.model';
+import { getAllUsersFromDB, createUserInDB, getUserByIdFromDB, updateUserInDB, deleteUserFromDB } from '../data-access/user.repository';
+import User from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 
 export const getAutoSuggestUsers = async (loginSubstring: string | undefined, limit: string | undefined): Promise<User[]> => {
