@@ -1,5 +1,6 @@
 import User from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
+import { hashPassword } from '../common/hashHelper';
 
 type UserInstance = User | void;
 
@@ -19,7 +20,9 @@ export const getUserByIdFromDB = async (userId: string): Promise<UserInstance> =
 };
 
 export const createUserInDB = async (newUser: User): Promise<UserInstance>  => {
-    newUser.id = uuidv4();
+    const hashedPassword = await hashPassword(newUser.password);
+    newUser.id = uuidv4();    
+    newUser.password = hashedPassword;
     return User.create(newUser);
 };
 

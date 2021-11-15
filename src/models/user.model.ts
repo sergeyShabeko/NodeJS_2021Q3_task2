@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { sequelize } from '../database/db';
 import { Model, DataTypes } from 'sequelize';
+import { hashPassword } from '../common/hashHelper';
 
 export default class User extends Model {
     id?: string;
@@ -41,27 +42,27 @@ User.init({
 });
 
 User.sync({ force: true })
-    .then(() => {
+    .then(async () => {
         return User.create({
             id: uuidv4(),
             login: 'Tim',
-            password: 'd23dew',
+            password: await hashPassword('d23dew'),
             age: 27
         })
     })
-    .then(() => {
+    .then(async () => {
         return User.create({
             id: uuidv4(),
             login: 'Siarhei',
-            password: 'd4rerfe',
+            password: await hashPassword('d4rerfe'),
             age: 22
         })
     })
-    .then(() => {
+    .then(async () => {
         return User.create({
             id: uuidv4(),
             login: 'Ivan',
-            password: 'v3f3dc',
+            password: await hashPassword('v3f3dc'),
             age: 66
         })
     })
