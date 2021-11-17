@@ -7,21 +7,21 @@ const router: Router = express.Router();
 
 router.route('/getAllUsers').get(async (_req: Request, res: Response) => {
     const users: User[] = await getAllUsers();
-    res.json(users);
+    res.json(users.map((user) => User.toResponse(user)));
 });
 
 router.route('/getAutoSuggestUsers').get(async (req: Request, res: Response) => {
     const loginSubstring = req.query['loginSubstring']?.toString();
     const limit = req.query['limit']?.toString();
     const users: User[] = await getAutoSuggestUsers(loginSubstring, limit);
-    res.json(users);
+    res.json(users.map((user) => User.toResponse(user)));
 });
 
 router.route('/getUserById/:id').get(async (req: Request, res: Response) => {
     const userId: string = req.params['id']!;
     const user: User|void = await getUserById(userId);
     if (user) {
-        res.status(200).json(user);
+        res.status(200).json(User.toResponse(user));
     } else {
         res.sendStatus(404);
     }
@@ -46,7 +46,7 @@ router.route('/updateUser/:id').put(async (req: Request, res: Response) => {
     const updatedData: User = req.body;
     const updatedUser = await updateUser(userId, updatedData);
     if (updatedUser) {
-        res.status(200).send(updatedUser);
+        res.status(200).send(User.toResponse(updatedUser));
     } else {
         res.sendStatus(400);
     }

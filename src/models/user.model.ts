@@ -9,6 +9,11 @@ export default class User extends Model {
     password!: string;
     age!: number;
     isDeleted?: boolean;
+
+    static toResponse(user: User) {
+        const { id, login, age } = user;
+        return { id, login, age };
+      }
 }
 
 User.init({
