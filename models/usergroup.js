@@ -1,9 +1,13 @@
 'use strict';
+
+// import User from './user';
+// import Group from './group';
+
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Group extends Model {
+  class UserGroup extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,29 +15,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Users, {
-        foreignKey: 'groupId',
-        through: models.UserGroup,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
     }
   };
-  Group.init({
-    id: {
+  UserGroup.init({
+    userId: {
       type: DataTypes.STRING,
-      allowNull: false,
       primaryKey: true,
-      unique: true
+      references: {
+        model: "Users",
+        key: 'id',
+      }
     },
-    name: {
+    userId: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-    permissions: DataTypes.ARRAY(DataTypes.STRING)
+      primaryKey: true,
+      references: {
+        model: "Groups",
+        key: 'id',
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Group',
+    modelName: 'UserGroup',
   });
-  return Group;
+  return UserGroup;
 };

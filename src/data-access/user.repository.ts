@@ -41,9 +41,7 @@ export const updateUserInDB = async (userId: string, updatedData: User): Promise
 };
 
 export const deleteUserFromDB = async (userId: string): Promise<UserInstance> => {
-    await userModel.update({
-        isDeleted: true
-      }, {
+    await userModel.destroy( {
         where: {
           id: userId
           }
