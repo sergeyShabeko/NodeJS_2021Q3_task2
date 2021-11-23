@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import User from '../models/user.model';
 import { createUser, getAllUsers, getUserById, updateUser, deleteUser, getAutoSuggestUsers } from '../services/user.service';
-import { schema } from '../validation/validation';
+import { userSchema as schema } from '../validation/validation';
 
 const router: Router = express.Router();
 
