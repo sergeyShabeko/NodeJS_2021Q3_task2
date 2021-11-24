@@ -1,9 +1,8 @@
-import { getAllUsersFromDB, createUserInDB, getUserByIdFromDB, updateUserInDB, deleteUserFromDB } from './user.repository';
-import User from './user.model';
-import { v4 as uuidv4 } from 'uuid';
+import { getAllUsersFromDB, createUserInDB, getUserByIdFromDB, updateUserInDB, deleteUserFromDB } from '../data-access/user.repository';
+import User from '../models/user.model';
 
 export const getAutoSuggestUsers = async (loginSubstring: string | undefined, limit: string | undefined): Promise<User[]> => {
-    const users = await Object.values(await getAllUsersFromDB()).filter((user) => user.isDeleted !== true);
+    const users = await getAllUsersFromDB();
     let suggestedUsers: User[] = [];
     if (loginSubstring && limit) {
         suggestedUsers = users.filter((user) => user.login.includes(loginSubstring.toString()));
@@ -14,23 +13,18 @@ export const getAutoSuggestUsers = async (loginSubstring: string | undefined, li
 };
 
 export const createUser = async (newUser: User) => {
-    newUser.id = uuidv4();
     try {
-        await createUserInDB(newUser);
+        return await createUserInDB(newUser);
     } catch (e) {
         console.error(e);
     }
 };
 
-export const getAllUsers = async () => {
-    const users = Object.values(await getAllUsersFromDB());
-    return users.filter((user) => user.isDeleted !== true);
-};
+export const getAllUsers = async () => await getAllUsersFromDB();
 
 export const getUserById = async (userId: string) => {
     try {
-        const user = await getUserByIdFromDB(userId);
-        return user;
+        return await getUserByIdFromDB(userId);
     } catch {
         return;
     }
@@ -38,8 +32,7 @@ export const getUserById = async (userId: string) => {
 
 export const updateUser = async (userId: string, updatedData: User) => {
     try {
-        await updateUserInDB(userId, updatedData);
-        return true;
+       return await updateUserInDB(userId, updatedData);
     } catch {
         return false;
     }
