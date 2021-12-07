@@ -1,6 +1,7 @@
-import express, { Request, Response, Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { getAllGroups, getGroupById, createGroup, updateGroup, deleteGroup } from '../services/group.service';
 import { groupSchema as schema } from '../validation/validation';
+import { AppError } from '../common/errorHandling';
 
 const router: Router = express.Router();
 
@@ -9,13 +10,13 @@ router.route('/getAllGroups').get(async (_req: Request, res: Response) => {
     res.json(groups);
 });
 
-router.route('/getGroupById/:id').get(async (req: Request, res: Response) => {
+router.route('/getGroupById/:id').get(async (req: Request, res: Response, next: NextFunction) => {
     const groupId: string = req.params['id']!;
     const group = await getGroupById(groupId);
     if (group) {
         res.status(200).json(group);
     } else {
-        res.sendStatus(404);
+        next(new AppError('Group by Id not found', 404));
     }
 });
 
@@ -29,7 +30,7 @@ router.route('/createGroup').post(async (req: Request, res: Response) => {
     }
 });
 
-router.route('/updateGroup/:id').put(async (req: Request, res: Response) => {
+router.route('/updateGroup/:id').put(async (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
     if (error) {
         res.status(400).send(error.message);
@@ -40,17 +41,17 @@ router.route('/updateGroup/:id').put(async (req: Request, res: Response) => {
     if (updatedGroup) {
         res.status(200).send(updatedGroup);
     } else {
-        res.sendStatus(400);
+        next(new AppError('Group not updated', 400));
     }
 });
 
-router.route('/deleteGroup/:id').delete(async (req: Request, res: Response) => {
+router.route('/deleteGroup/:id').delete(async (req: Request, res: Response, next: NextFunction) => {
     const groupId: string = req.params['id']!;
     const isDeleted = await deleteGroup(groupId);
     if (isDeleted) {
         res.sendStatus(204);
     } else {
-        res.sendStatus(404);
+        next(new AppError('Group not found', 404));
     } 
 });
 
