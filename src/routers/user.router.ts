@@ -1,7 +1,8 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Request, Response, Router, NextFunction } from 'express';
 import User from '../models/user.model';
 import { createUser, getAllUsers, getUserById, updateUser, deleteUser, getAutoSuggestUsers } from '../services/user.service';
 import { userSchema as schema } from '../validation/validation';
+import { AppError } from '../common/errorHandling';
 
 const router: Router = express.Router();
 
@@ -17,13 +18,13 @@ router.route('/getAutoSuggestUsers').get(async (req: Request, res: Response) => 
     res.json(users.map((user) => User.toResponse(user)));
 });
 
-router.route('/getUserById/:id').get(async (req: Request, res: Response) => {
+router.route('/getUserById/:id').get(async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params['id']!;
     const user: User|void = await getUserById(userId);
     if (user) {
         res.status(200).json(User.toResponse(user));
     } else {
-        res.sendStatus(404);
+        next(new AppError('User by Id not found', 404))
     }
 });
 
@@ -37,7 +38,7 @@ router.route('/createUser').post(async (req: Request, res: Response) => {
     }
 });
 
-router.route('/updateUser/:id').put(async (req: Request, res: Response) => {
+router.route('/updateUser/:id').put(async (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
     if (error) {
         res.status(400).send(error.message);
@@ -48,17 +49,17 @@ router.route('/updateUser/:id').put(async (req: Request, res: Response) => {
     if (updatedUser) {
         res.status(200).send(User.toResponse(updatedUser));
     } else {
-        res.sendStatus(400);
+        next(new AppError('User not updated', 400));
     }
 });
 
-router.route('/deleteUser/:id').delete(async (req: Request, res: Response) => {
+router.route('/deleteUser/:id').delete(async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params['id']!;
     const isDeleted = await deleteUser(userId);
     if (isDeleted) {
         res.sendStatus(204);
     } else {
-        res.sendStatus(404);
+        next(new AppError('User not found', 404));
     } 
 });
 

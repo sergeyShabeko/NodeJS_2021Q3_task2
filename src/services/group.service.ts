@@ -7,15 +7,15 @@ export const createGroup = async (newGroup: Group) => {
     try {
         return await createGroupInDB(newGroup);
     } catch (e) {
-        console.error(e);
+        return e;
     }
 };
 
 export const getGroupById = async (groupId: string) => {
     try {
         return await getGroupByIdFromDB(groupId);
-    } catch {
-        return;
+    } catch (e){
+        return e;
     }
 };
 
