@@ -48,3 +48,9 @@ export const deleteUserFromDB = async (userId: string): Promise<UserInstance> =>
         }
     );
 };
+
+export const getUserForToken = async (login: string) => {
+    return await userModel.findOne({ where: {
+      login
+    } });
+  };
