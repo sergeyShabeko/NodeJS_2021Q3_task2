@@ -24,12 +24,14 @@ export const getToken = async (login: string, password: string) => {
 };
 
 export const checkAuthorization = async (req: Request, res: Response, next: NextFunction) => {
+    if(config.ROUTINGS.includes(req.originalUrl)) {
+        return next();
+    }
     const token = req.header('Authorization');
     try {
         if (token) {
             const secret: string = config.JWT_SECRET_KEY!;
-            const t = jwt.verify(token, secret);
-            console.log(t);
+            jwt.verify(token, secret);
             return next();
         } else {
             res.status(401).send('Unauthorized error');

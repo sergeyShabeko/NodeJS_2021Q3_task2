@@ -16,10 +16,12 @@ app.use(express.json());
 
 app.use(requestsLogger);
 
+app.use(checkAuthorization);
+
 app.use('/login', authorizationRouter);
-app.use('/users', checkAuthorization,  userRouter);
-app.use('/groups', checkAuthorization,  groupRouter);
-app.use('/userGroup', checkAuthorization,  userGroupRouter);
+app.use('/users', userRouter);
+app.use('/groups', groupRouter);
+app.use('/userGroup', userGroupRouter);
 
 app.use(errorsLogger);
 app.use(errorHandling);

@@ -13,6 +13,7 @@ export const config: {
     POSTGRES_DB: string;
     POSTGRES_HOST: string;
     JWT_SECRET_KEY: string;
+    ROUTINGS: Array<string>;
 } = {
   PORT: +process.env['PORT']!,
   POSTGRES_PORT: +process.env['POSTGRES_PORT']!,
@@ -21,4 +22,5 @@ export const config: {
   POSTGRES_DB: process.env['POSTGRES_DB']!,
   POSTGRES_HOST: process.env['POSTGRES_HOST']!,
   JWT_SECRET_KEY: process.env['JWT_SECRET_KEY']!,
+  ROUTINGS: process.env['ROUTINGS']!.split(' ')
 };
